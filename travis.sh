@@ -56,7 +56,9 @@ sudo -E sh -c 'echo "deb $ROS_REPOSITORY_PATH `lsb_release -cs` main" > /etc/apt
 travis_run sudo apt-get -qq update
 
 # Setup rosdep - note: "rosdep init" is already setup in base ROS Docker image
-travis_run rosdep update
+# If rosdep fails the first time, repeatidly run rosdep until it does not fail
+ret_rosdep=1
+travis_run rosdep update || while [ $ret_rosdep != 0 ]; do sleep 1; rosdep update && ret_rosdep=0 || echo "Failed: rosdep update, retrying..."; done
 
 # Create workspace
 travis_run mkdir -p ~/ros/ws_$REPOSITORY_NAME/src
