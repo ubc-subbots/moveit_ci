@@ -7,6 +7,7 @@
 # Inspired by ROS Industrial https://github.com/ros-industrial/industrial_ci
 #
 # Author:  Dave Coleman, Isaac I. Y. Saito, Robert Haschke
+# Modified By: Gareth Ellis (For UBC Snowbots)
 
 # Note: ROS_REPOSITORY_PATH is no longer a valid option, use ROS_REPO. See README.md
 
@@ -123,29 +124,21 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 travis_run cd $CATKIN_WS
 
 # Configure catkin
-travis_run catkin config --extend /opt/ros/$ROS_DISTRO --install --cmake-args -DCMAKE_BUILD_TYPE=Release
+#travis_run catkin config --extend /opt/ros/$ROS_DISTRO --install --cmake-args -DCMAKE_BUILD_TYPE=Release
+travis_run catkin_make
 
 # Console output fix for: "WARNING: Could not encode unicode characters"
 export PYTHONIOENCODING=UTF-8
 
 # For a command that doesn’t produce output for more than 10 minutes, prefix it with my_travis_wait
-my_travis_wait 60 catkin build --no-status --summarize || exit 1
+#my_travis_wait 60 catkin build --no-status --summarize || exit 1
 
 # Source the new built workspace
-travis_run source install/setup.bash;
-
-# Choose which packages to run tests on
-echo "Test blacklist: $TEST_BLACKLIST"
-TEST_PKGS=$(catkin_topological_order "$CI_SOURCE_PATH" --only-names | grep -Fvxf <(echo "$TEST_BLACKLIST" | tr ' ;,' '\n'))
-if [ -n "$TEST_PKGS" ]; then
-    TEST_PKGS="--no-deps $TEST_PKGS";
-fi
-
-# Re-build workspace with tests
-travis_run catkin build --no-status --summarize --make-args tests -- $TEST_PKGS
+#travis_run source install/setup.bash;
+travis_run source devel/setup.sh
 
 # Run tests
-travis_run catkin build --catkin-make-args run_tests -- --no-status --summarize $TEST_PKGS
+catkin_make run_tests
 
 # Show test results and throw error if necessary
 travis_run catkin_test_results
