@@ -123,9 +123,10 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 # Change to base of workspace
 travis_run cd $CATKIN_WS
 
-# Configure catkin
-#travis_run catkin config --extend /opt/ros/$ROS_DISTRO --install --cmake-args -DCMAKE_BUILD_TYPE=Release
+# Build the project
+travis_fold:start:BUILD
 travis_run catkin_make
+travis_fold:end:BUILD
 
 # Console output fix for: "WARNING: Could not encode unicode characters"
 export PYTHONIOENCODING=UTF-8
@@ -134,11 +135,12 @@ export PYTHONIOENCODING=UTF-8
 #my_travis_wait 60 catkin build --no-status --summarize || exit 1
 
 # Source the new built workspace
-#travis_run source install/setup.bash;
 travis_run source devel/setup.sh
 
 # Run tests
-catkin_make run_tests
+travis_fold:start:TESTS
+travis_run catkin_make run_tests
+travis_fold:end:TESTS
 
 # Show test results and throw error if necessary
 travis_run catkin_test_results
