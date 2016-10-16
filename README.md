@@ -2,6 +2,7 @@
 Common Travis CI configuration for MoveIt! project
 
 Authors: Dave Coleman, Isaac I. Y. Saito, Robert Haschke
+
 Modified By: Gareth Ellis (For UBC Snowbots)
 
 - Uses Docker for all Distros
