@@ -110,8 +110,7 @@ fi
 travis_run ln -s $CI_SOURCE_PATH .
 
 # Debug: see the files in current folder
-travis_run sudo apt-get -y install tree
-travis_run tree .
+travis_run ls -a .
 
 # Run before script
 if [ "${BEFORE_SCRIPT// }" != "" ]; then
@@ -124,10 +123,8 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 # Change to base of workspace
 travis_run cd $CATKIN_WS
 
-travis_run cat .catkin_tools/profiles/default/config.yaml
-
 # Build the project
-travis_run catkin_make
+travis_run catkin build
 
 # Console output fix for: "WARNING: Could not encode unicode characters"
 export PYTHONIOENCODING=UTF-8
@@ -139,7 +136,7 @@ export PYTHONIOENCODING=UTF-8
 travis_run source devel/setup.sh
 
 # Run tests
-travis_run catkin_make run_tests
+travis_run catkin run_tests
 
 # Show test results and throw error if necessary
 travis_run catkin_test_results
