@@ -120,12 +120,15 @@ fi
 # Install source-based package dependencies
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 
+# Setup Catkin
+travis_run catkin config --extend /opt/ros/$ROS_DISTRO --install --cmake-args -DCMAKE_BUILD_TYPE=Release
+
 # Change to base of workspace
 travis_run cd $CATKIN_WS
 travis_run ls .
 travis_run sudo apt-get -y install tree
-tree .catkin_tools
-tree .
+travis_run tree .catkin_tools
+travis_run tree .
 
 # Build the project
 travis_run catkin build
