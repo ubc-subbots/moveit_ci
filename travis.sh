@@ -110,7 +110,7 @@ fi
 travis_run ln -s $CI_SOURCE_PATH .
 
 # Debug: see the files in current folder
-travis_run ls -a
+travis_run tree .
 
 # Run before script
 if [ "${BEFORE_SCRIPT// }" != "" ]; then
