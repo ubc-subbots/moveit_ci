@@ -125,6 +125,7 @@ travis_run cd $CATKIN_WS
 travis_run ls .
 travis_run sudo apt-get -y install tree
 tree .catkin_tools
+tree .
 
 # Build the project
 travis_run catkin build
