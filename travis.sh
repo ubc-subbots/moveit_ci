@@ -124,12 +124,7 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 # travis_run catkin config --extend /opt/ros/$ROS_DISTRO --install --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 # Change to base of workspace
-travis_run cd $CATKIN_WS
-travis_run ls .
-travis_run sudo apt-get -y install tree
-travis_run tree .catkin_tools
-travis_run tree .
-travis_run cd src/IGVC-2017
+travis_run cd $CATKIN_WS/src/$REPOSITORY_NAME
 
 # Build the project
 travis_run catkin build
