@@ -129,6 +129,7 @@ travis_run ls .
 travis_run sudo apt-get -y install tree
 travis_run tree .catkin_tools
 travis_run tree .
+travis_run cd src/IGVC-2017
 
 # Build the project
 travis_run catkin build
