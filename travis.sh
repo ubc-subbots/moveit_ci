@@ -122,6 +122,9 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 
 # Change to base of workspace
 travis_run cd $CATKIN_WS
+travis_run ls .
+travis_run sudo apt-get -y install tree
+tree .catkin_tools
 
 # Build the project
 travis_run catkin build
