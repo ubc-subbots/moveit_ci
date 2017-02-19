@@ -110,6 +110,7 @@ fi
 travis_run ln -s $CI_SOURCE_PATH .
 
 # Debug: see the files in current folder
+travis run sudo apt-get install tree
 travis_run tree .
 
 # Run before script
