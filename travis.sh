@@ -110,7 +110,8 @@ fi
 travis_run ln -s $CI_SOURCE_PATH .
 
 # Debug: see the files in current folder
-travis_run ls -a
+travis_run sudo apt-get -y install tree
+travis_run tree .
 
 # Run before script
 if [ "${BEFORE_SCRIPT// }" != "" ]; then
@@ -122,6 +123,8 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 
 # Change to base of workspace
 travis_run cd $CATKIN_WS
+
+travis_run cat .catkin_tools/profiles/default/config.yaml
 
 # Build the project
 travis_run catkin_make
