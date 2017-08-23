@@ -34,6 +34,8 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
     fi
     # Check if we need to change any files
     output="$(.moveit_ci/git-clang-format --commit $base_commit --diff)"
+    # Strip spaces from the beginning and end of the output
+    output="$(xargs $output)"
     if [ "$output" == "no modified file to format" ] || [ "$output" == "clang-format did not modify any files" ] ; then
         echo "clang-format passed :D"
         exit 0
