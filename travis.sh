@@ -19,9 +19,6 @@ export CATKIN_WS=/root/ws_moveit
 echo "---"
 echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 
-# Helper functions
-source ${CI_SOURCE_PATH}/$CI_PARENT_DIR/util.sh
-
 # Check if we're doing formatting verification
 if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
     # Determine what we should compare this branch against to figure out what 
@@ -35,7 +32,7 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
       echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
     fi
     # Check if we need to change any files
-    output = "$(.travis/git-clang-format --binary clang-format-3.8 --commit $base_commit --diff)"
+    output = "$(.moveit_ci/git-clang-format --binary clang-format-3.8 --commit $base_commit --diff)"
     if [ "$output" == "no modified file to format" ] || [ "$output" == "clang-format did not modify any files" ] ; then
         echo "clang-format passed :D"
         exit 0
@@ -45,6 +42,10 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
         exit 1
     fi
 fi
+
+
+# Helper functions
+source ${CI_SOURCE_PATH}/$CI_PARENT_DIR/util.sh
 
 # Run all CI in a Docker container
 if ! [ "$IN_DOCKER" ]; then
