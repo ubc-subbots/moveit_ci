@@ -22,6 +22,30 @@ echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 # Helper functions
 source ${CI_SOURCE_PATH}/$CI_PARENT_DIR/util.sh
 
+# Check if we're doing formatting verification
+if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
+    # Determine what we should compare this branch against to figure out what 
+    # files were changed
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
+      # Not in a pull request, so compare against parent commit
+      base_commit="HEAD^"
+      echo "Running clang-format against parent commit $(git rev-parse $base_commit)"
+    else
+      base_commit="$TRAVIS_BRANCH"
+      echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
+    fi
+    # Check if we need to change any files
+    output = "$(.travis/git-clang-format --binary clang-format-3.8 --commit $base_commit --diff)"
+    if [ "$output" == "no modified file to format" ] || [ "$output" == "clang-format did not modify any files" ] ; then
+        echo "clang-format passed :D"
+        exit 0
+    else
+        echo "clang-format failed :( - please reformat your code via the `git clang-format` tool and resubmit"
+        echo "$output"
+        exit 1
+    fi
+fi
+
 # Run all CI in a Docker container
 if ! [ "$IN_DOCKER" ]; then
 
