@@ -25,6 +25,7 @@ echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 # If we are doing format verification, that is ALL we'll do. We won't continue
 # on below
 if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
+    sudo apt-get install clang-format-$VERSION
     # Determine what we should compare this branch against to figure out what 
     # files were changed
     if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
