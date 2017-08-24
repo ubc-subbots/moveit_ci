@@ -17,7 +17,7 @@ export HIT_ENDOFSCRIPT=false
 export REPOSITORY_NAME=${PWD##*/}
 export CATKIN_WS=/root/ws_moveit
 # The version of clang to be used to verify formatting
-export CLANG_VERSION="4.0"
+export CLANG_VERSION=4.0
 echo "---"
 echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 
