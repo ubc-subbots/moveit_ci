@@ -12,6 +12,7 @@ Modified By: Gareth Ellis (For UBC Snowbots)
 - Clean Travis log files - looks similiar to a regular .travis.yml file
 - Runs tests for the current repo, e.g. if testing moveit\_core only runs tests for moveit\_core
 - Builds into install space
+- Runs Clang Format over any changes made 
 
 ## Usage
 
@@ -34,6 +35,7 @@ env:
   matrix:
     - ROS_DISTRO=kinetic  ROS_REPO=ros              UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/UBC-Snowbots/IGVC-2017/travis_ci_testing/.rosinstall
     - ROS_DISTRO=kinetic  UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/UBC-Snowbots/IGVC-2017/travis_ci_testing/.rosinstall
+    - TEST_CLANG_FORMAT=TRUE ROS_DISTRO=kinetic UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/UBC-Snowbots/IGVC-2017/$TRAVIS_BRANCH/.rosinstall
 matrix:
   allow_failures:
       - env: ROS_DISTRO=kinetic  ROS_REPO=ros              UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/UBC-Snowbots/IGVC-2017/travis_ci_testing/.rosinstall
@@ -51,6 +53,7 @@ script:
 - ROS_REPO: (default: ros-shadow-fixed) install ROS debians from either regular release or from shadow-fixed, i.e. http://packages.ros.org/ros-shadow-fixed/ubuntu
 - BEFORE_SCRIPT: (default: not set): Used to specify shell commands or scripts that run before building packages.
 - UPSTREAM_WORKSPACE (default: debian): When set as "file", the dependended packages that need to be built from source are downloaded based on a .rosinstall file in your repository. When set to a "http" URL, this downloads the rosinstall configuration from an http location
+- TEST_CLANG_FORMAT (default: False): If set to `TRUE`, no unit tests will be run, and `clang-format` will be run over any commits made. If commit is in a pull request, `clang-format` is run over all changes to be merged.
 
 More configurations as seen in [industrial_ci](https://github.com/ros-industrial/industrial_ci) can be added, in the future.
 
