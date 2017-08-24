@@ -16,6 +16,8 @@ export CI_PARENT_DIR=.moveit_ci  # This is the folder name that is used in downs
 export HIT_ENDOFSCRIPT=false
 export REPOSITORY_NAME=${PWD##*/}
 export CATKIN_WS=/root/ws_moveit
+# The version of clang to be used to verify formatting
+export CLANG_VERSION="4.0"
 echo "---"
 echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 
@@ -23,6 +25,8 @@ echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 # If we are doing format verification, that is ALL we'll do. We won't continue
 # on below
 if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
+    # Install everything we need to run clang format
+    apt-get install "clang-format-$CLANG_VERSION" 
     # Determine what we should compare this branch against to figure out what 
     # files were changed
     if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
@@ -36,7 +40,7 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
       echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
     fi
     # Check if we need to change any files
-    output="$(.moveit_ci/git-clang-format --binary .moveit_ci/clang-format-4.0.1 --commit $base_commit --diff)"
+    output="$(.moveit_ci/git-clang-format --binary clang-format-$CLANG_VERSION --commit $base_commit --diff)"
     if [[ $output == *"no modified files to format"* ]] || [[ $output == *"clang-format did not modify any files"* ]] ; then
         echo "clang-format passed :D"
         exit 0
