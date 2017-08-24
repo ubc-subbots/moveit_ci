@@ -27,6 +27,7 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
       # Not in a pull request, so compare against parent commit
       base_commit="HEAD^"
       echo "Running clang-format against parent commit $(git rev-parse $base_commit)"
+      echo "=================================================="
     else
       # In a pull request so compare against branch we're trying to merge into
       base_commit="$TRAVIS_BRANCH"
@@ -34,12 +35,13 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
     fi
     # Check if we need to change any files
     output="$(.moveit_ci/git-clang-format --commit $base_commit --diff)"
-    if [[ "$output" == *"no modified file to format"* ]] || [[ "$output" == *"clang-format did not modify any files"* ]] ; then
+    if [[ $output == *"no modified files to format"* ]] || [[ $output == *"clang-format did not modify any files"* ]] ; then
         echo "clang-format passed :D"
         exit 0
     else
-        echo "clang-format failed :( - please reformat your code via the \`git clang-format\` tool and resubmit"
         echo "$output"
+        echo "=================================================="
+        echo "clang-format failed :( - please reformat your code via the \`git clang-format\` tool and resubmit"
         exit 1
     fi
 fi
