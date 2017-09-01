@@ -156,10 +156,8 @@ travis_run cd $CATKIN_WS
 # Install source-based package dependencies
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 
-
-# DEBUG: Sanity check me
-travis_run git submodule update --recursive
-
+# Debug:
+travis_run ls /root/IGVC-2017/src/gps_und
 
 # Build the project
 travis_run catkin_make
