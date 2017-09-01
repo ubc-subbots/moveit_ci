@@ -157,7 +157,7 @@ travis_run cd $CATKIN_WS
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 
 # Debug:
-travis_run ls /root/IGVC-2017/src/gps_und
+travis_run ls /root/IGVC-2017/src/gps_umd
 
 # Build the project
 travis_run catkin_make
