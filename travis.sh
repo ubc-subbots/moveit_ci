@@ -150,11 +150,20 @@ if [ "${BEFORE_SCRIPT// }" != "" ]; then
     travis_run sh -c "${BEFORE_SCRIPT}";
 fi
 
+# Change to base of workspace
+travis_run cd $CATKIN_WS
+
 # Install source-based package dependencies
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 
-# Change to base of workspace
-travis_run cd $CATKIN_WS
+# DEBUG: 
+travis_run tree .
+
+# DEBUG: Sanity check me
+travis_run git submodule update --recursive
+
+# DEBUG 
+travis_run tree .
 
 # Build the project
 travis_run catkin_make
