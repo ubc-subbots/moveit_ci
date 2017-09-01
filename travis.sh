@@ -156,14 +156,10 @@ travis_run cd $CATKIN_WS
 # Install source-based package dependencies
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 
-# DEBUG: 
-travis_run tree .
 
 # DEBUG: Sanity check me
 travis_run git submodule update --recursive
 
-# DEBUG 
-travis_run tree .
 
 # Build the project
 travis_run catkin_make
