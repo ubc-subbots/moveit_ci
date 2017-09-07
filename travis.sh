@@ -162,7 +162,7 @@ travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_
 travis_run cd $CATKIN_WS/src/$REPOSITORY_NAME
 
 # Build the project
-travis_run catkin build
+travis_run catkin_make
 
 # Console output fix for: "WARNING: Could not encode unicode characters"
 export PYTHONIOENCODING=UTF-8
@@ -174,7 +174,7 @@ export PYTHONIOENCODING=UTF-8
 travis_run source devel/setup.sh
 
 # Run tests
-travis_run catkin run_tests
+travis_run catkin_make run_tests
 
 # Show test results and throw error if necessary
 travis_run catkin_test_results
