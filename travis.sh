@@ -25,7 +25,6 @@ echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
 # If we are doing format verification, that is ALL we'll do. We won't continue
 # on below
 if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
-    sudo apt-get install clang-format-$VERSION
     # Determine what we should compare this branch against to figure out what 
     # files were changed
     if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
@@ -39,7 +38,7 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
       echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
     fi
     # Check if we need to change any files
-    output="$(.moveit_ci/git-clang-format --binary moveit_ci/clang-format-$CLANG_VERSION --commit $base_commit --diff)"
+    output="$(./moveit_ci/git-clang-format --binary .moveit_ci/clang-format-$CLANG_VERSION --commit $base_commit --diff)"
     if [[ $output == *"no modified files to format"* ]] || [[ $output == *"clang-format did not modify any files"* ]] ; then
         echo "clang-format passed :D"
         exit 0
