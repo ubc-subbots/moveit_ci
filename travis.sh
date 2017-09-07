@@ -16,8 +16,41 @@ export CI_PARENT_DIR=.moveit_ci  # This is the folder name that is used in downs
 export HIT_ENDOFSCRIPT=false
 export REPOSITORY_NAME=${PWD##*/}
 export CATKIN_WS=/root/ws_moveit
+# The version of clang to be used to verify formatting
+export CLANG_VERSION=4.0
 echo "---"
 echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $ROS_DISTRO"
+
+# Check if we're doing formatting verification
+# If we are doing format verification, that is ALL we'll do. We won't continue
+# on below
+if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
+    sudo apt-get install clang-format-$VERSION
+    # Determine what we should compare this branch against to figure out what 
+    # files were changed
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
+      # Not in a pull request, so compare against parent commit
+      base_commit="HEAD^"
+      echo "Running clang-format against parent commit $(git rev-parse $base_commit)"
+      echo "=================================================="
+    else
+      # In a pull request so compare against branch we're trying to merge into
+      base_commit="$TRAVIS_BRANCH"
+      echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
+    fi
+    # Check if we need to change any files
+    output="$(.moveit_ci/git-clang-format --binary clang-format-$CLANG_VERSION --commit $base_commit --diff)"
+    if [[ $output == *"no modified files to format"* ]] || [[ $output == *"clang-format did not modify any files"* ]] ; then
+        echo "clang-format passed :D"
+        exit 0
+    else
+        echo "$output"
+        echo "=================================================="
+        echo "clang-format failed :( - please reformat your code via the \`git clang-format\` tool and resubmit"
+        exit 1
+    fi
+fi
+
 
 # Helper functions
 source ${CI_SOURCE_PATH}/$CI_PARENT_DIR/util.sh
@@ -116,6 +149,9 @@ travis_run ls -a .
 if [ "${BEFORE_SCRIPT// }" != "" ]; then
     travis_run sh -c "${BEFORE_SCRIPT}";
 fi
+
+# Change to base of workspace
+travis_run cd $CATKIN_WS
 
 # Install source-based package dependencies
 travis_run rosdep install -y -q -n --from-paths . --ignore-src --rosdistro $ROS_DISTRO
