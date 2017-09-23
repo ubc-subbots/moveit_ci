@@ -35,6 +35,8 @@ if [ "$TEST_CLANG_FORMAT" == "TRUE" ]; then
     else
       # In a pull request so compare against branch we're trying to merge into
       base_commit="$TRAVIS_BRANCH"
+      # Make sure we pull the branches we're trying to merge against
+      git fetch origin $base_commit:$base_commit
       echo "Running clang-format against branch $base_commit, with hash $(git rev-parse $base_commit)"
     fi
     # Check if we need to change any files
