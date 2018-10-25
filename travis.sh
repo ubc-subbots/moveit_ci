@@ -117,14 +117,13 @@ case "$UPSTREAM_WORKSPACE" in
         echo "Obtain deb binary for upstream packages."
         ;;
     http://* | https://*) # When UPSTREAM_WORKSPACE is an http url, use it directly
-        travis_run wstool init .
-        travis_run wstool merge $UPSTREAM_WORKSPACE
+        travis_run wget $UPSTREAM_WORKSPACE
         ;;
     *) # Otherwise assume UPSTREAM_WORKSPACE is a local file path
         travis_run wstool init .
         if [ -e $CI_SOURCE_PATH/$UPSTREAM_WORKSPACE ]; then
             # install (maybe unreleased version) dependencies from source
-            travis_run wstool merge file://$CI_SOURCE_PATH/$UPSTREAM_WORKSPACE
+            travis_run wget file://$CI_SOURCE_PATH/$UPSTREAM_WORKSPACE
         else
             echo "No rosinstall file found, aborting" && exit 1
         fi
